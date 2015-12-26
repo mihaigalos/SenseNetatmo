@@ -1,0 +1,103 @@
+
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>JavaScript in Body</h1>
+
+
+<script>
+
+
+//var http = require('https'); 
+
+var clientId = "";
+var clientSecret = "MQ4kGUsoKPGq8MlCC3FFKw7intcir6yfwqSJWUaMC";
+
+function getNetatmoData(callback, cardTitle){
+    var sessionAttributes = {};
+    
+    
+    
+	var userId="mihaigalos@yahoo.com"; 
+	var parola="mihaiNetatmo12"; 
+	var formUserPass = { client_id: clientId, 
+	client_secret: clientSecret, 
+	username: userId, 
+	password: parola, 
+	scope: 'read_station', 
+	grant_type: 'password' };
+	
+	shouldEndSession = false;
+    cardTitle = "Welcome";
+    speechOutput =""; 
+    repromptText ="";
+	
+	var options = {
+		host: 'api.netatmo.net',
+		path: '/oauth2/token',
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+			'client_id': clientId,
+			'client_secret': clientSecret,
+			'username': userId, 
+			'password': parola, 
+			'scope': 'read_station', 
+			'grant_type': 'password'
+		}
+	};
+	var req = http.request(options, function(res) {
+            res.setEncoding('utf8');
+            res.on('data', function (chunk) {
+                console.log("body: " + chunk);
+            
+            });
+            
+            res.on('error', function (chunk) {
+                console.log('Error: '+chunk);
+            });
+            
+            res.on('end', function() {
+				
+				speechOutput = "Request successfuly processed."
+				console.log(speechOutput);
+				repromptText = ""
+				callback(sessionAttributes, buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession));
+			});
+            
+        });
+
+        req.on('error', function(e){console.log('error: '+e)});
+        
+        req.end();
+		
+
+}
+
+function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
+    return {
+        outputSpeech: {
+            type: "PlainText",
+            text: output
+        },
+        card: {
+            type: "Simple",
+            title: "SessionSpeechlet - " + title,
+            content: "SessionSpeechlet - " + output
+        },
+        reprompt: {
+            outputSpeech: {
+                type: "PlainText",
+                text: repromptText
+            }
+        },
+        shouldEndSession: shouldEndSession
+    };
+}
+
+</script>
+
+</body>
+</html> 
