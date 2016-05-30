@@ -1,4 +1,4 @@
-# SenseNetatmo
+# SenseNetatmo [![license](https://img.shields.io/badge/license-GPLv3-brightgreen.svg)](LICENSE)
 Implementation of wrapper code to enable reading of measurements from the Netatmo Weatherstation using Amazon Echo (Alexa).
 
 # Keywords 
